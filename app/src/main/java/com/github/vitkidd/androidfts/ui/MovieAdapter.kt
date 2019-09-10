@@ -14,15 +14,15 @@ class MovieAdapter(private val movies: MutableList<Movie>) : RecyclerView.Adapte
     override fun getItemCount() = movies.size
 
     override fun onBindViewHolder(holder: MovieHolder, position: Int) {
-        holder.itemView?.title_tv?.text = Html.fromHtml(movies[position].title)
-        holder.itemView?.desc_tv?.text = Html.fromHtml(movies[position].overview)
+        holder.itemView.titleTv.text = Html.fromHtml(movies[position].title)
+        holder.itemView.descTv.text = Html.fromHtml(movies[position].overview)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieHolder {
         return MovieHolder(LayoutInflater.from(parent.context).inflate(R.layout.item, parent, false))
     }
 
-    fun updateMovies(newMovies: ArrayList<Movie>) {
+    fun updateMovies(newMovies: List<Movie>) {
         movies.clear()
         movies.addAll(newMovies)
         notifyDataSetChanged()

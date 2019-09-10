@@ -8,7 +8,6 @@ import com.facebook.stetho.Stetho
 import com.github.vitkidd.androidfts.R
 import com.github.vitkidd.androidfts.db.DbHelper
 import com.jakewharton.rxbinding2.widget.RxTextView
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
@@ -27,18 +26,18 @@ class MainActivity : AppCompatActivity() {
         dbHelper = DbHelper(applicationContext)
         dbHelper.populate(applicationContext)
 
-        findViewById<RecyclerView>(R.id.recycler_view).apply {
+        findViewById<RecyclerView>(R.id.recyclerView).apply {
             adapter = movieAdapter
             layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
         }
 
-        RxTextView.afterTextChangeEvents(findViewById(R.id.edit_text))
+        RxTextView.afterTextChangeEvents(findViewById(R.id.editText))
                 .debounce(500, TimeUnit.MILLISECONDS)
                 .map { it.editable().toString() }
                 .filter { it.isNotEmpty() && it.length > 2 }
-                .flatMap { Observable.just(dbHelper.search(it)) }
+                .map(dbHelper::thirdSearch)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { movieAdapter.updateMovies(it) }
+                .subscribe(movieAdapter::updateMovies)
     }
 }
